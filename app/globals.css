@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @keyframes glow-pulse {
+    0%, 100% {
+      border-color: rgb(59, 130, 246, 0.2);
+      box-shadow: 0 0 0 0 rgb(59, 130, 246, 0);
+    }
+    50% {
+      border-color: rgb(59, 130, 246, 0.6);
+      box-shadow: 0 0 10px 2px rgb(59, 130, 246, 0.2);
+    }
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
