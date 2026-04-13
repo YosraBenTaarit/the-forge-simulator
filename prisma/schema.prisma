@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  password  String?
+  image     String?
+  role      String?    @default("none") // backend-swe, devops, ml-engineer, frontend, pm, sre
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relationships
+  attempts  Attempt[]
+  reports   Report[]
+
+  @@map("users")
+}
+
+model Scenario {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  category    String    // backend-swe, devops, ml-engineer, frontend, pm, sre
+  difficulty  String    // junior, intermediate, senior
+  timeLimit   Int       // in minutes
+  storyPoints Int
+  
+  // Scenario content (INC-4029 memory leak, etc)
+  problemStatement String
+  requirements String    // JSON array
+  acceptanceCriteria String // JSON array
+  
+  // Impact metrics
+  affectedUsers String
+  estimatedImpact String
+  severity      String    // CRITICAL, HIGH, MEDIUM, LOW
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relationships
+  attempts Attempt[]
+
+  @@map("scenarios")
+}
+
+model Attempt {
+  id          String    @id @default(cuid())
+  userId      String
+  scenarioId  String
+  
+  // Execution
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  actualTime  Int?      // in seconds
+  
+  // Submission
+  codeFix     String?   // submitted code
+  report      String?   // user's written report
+  
+  // Evaluation
+  score       Int?      // 0-100
+  feedback    String?   // JSON array of feedback items
+  approved    Boolean   @default(false)
+  
+  // Status
+  status      String    @default("in-progress") // in-progress, submitted, reviewed, approved, done
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scenario  Scenario  @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, scenarioId])
+  @@map("attempts")
+}
+
+model Report {
+  id        String    @id @default(cuid())
+  userId    String
+  attemptId String?
+  
+  title     String
+  content   String    // Markdown/text
+  learnings String?   // What the user learned
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}

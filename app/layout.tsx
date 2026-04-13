@@ -1,4 +1,5 @@
 import "./globals.css";
+import { AuthSessionProvider } from "@/components/SessionProvider";
 
 export const metadata = {
   title: 'The Forge Simulator',
@@ -11,8 +12,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <AuthSessionProvider>
+          {children}
+        </AuthSessionProvider>
+      </body>
     </html>
   )
 }

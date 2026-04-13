@@ -6,14 +6,24 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.1.0",
+    "@prisma/client": "^7.6.0",
     "@webcontainer/api": "^1.6.1",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.0",
     "lucide-react": "^0.300.0",
     "next": "^15.0.0",
+    "next-auth": "^5.0.0-beta.30",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.0",
@@ -27,7 +37,9 @@
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
     "postcss": "latest",
+    "prisma": "^7.6.0",
     "tailwindcss": "^3.4.0",
+    "ts-node": "^10.9.2",
     "typescript": "latest"
   }
 }
